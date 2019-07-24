@@ -209,6 +209,9 @@ SWIFT_CLASS("_TtC4test11AppDelegate")
 SWIFT_CLASS("_TtC4test14ViewController")
 @interface ViewController : UIViewController <UITextFieldDelegate>
 - (void)viewDidLoad;
+- (void)renewTapped;
+- (void)validateTapped;
+- (void)textFieldDidBeginEditing:(UITextField * _Nonnull)textField;
 - (void)textFieldDidEndEditing:(UITextField * _Nonnull)textField reason:(enum UITextFieldDidEndEditingReason)reason;
 - (nonnull instancetype)initWithNibName:(NSString * _Nullable)nibNameOrNil bundle:(NSBundle * _Nullable)nibBundleOrNil OBJC_DESIGNATED_INITIALIZER;
 - (nullable instancetype)initWithCoder:(NSCoder * _Nonnull)aDecoder OBJC_DESIGNATED_INITIALIZER;

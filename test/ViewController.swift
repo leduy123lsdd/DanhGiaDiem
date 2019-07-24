@@ -10,24 +10,29 @@ import UIKit
 
 class ViewController: UIViewController, UITextFieldDelegate {
     //MARK: - Variables
+    var diem_mieng:String = ""
+    var diem_giuaKi:String = ""
+    var diem_cuoiKi:String = ""
+    
     let diemMieng: UITextField = {
         let textField = UITextField()
         textField.setupStyleAndLayout()
-        textField.placeholder = "   Nhập điểm miệng. Ví dụ: 8.5 9 10"
+        textField.placeholder = "Nhập điểm miệng. Ví dụ: 8.5  9  10"
+        
         return textField
     }()
     
     let diemGiuaKi: UITextField = {
         let textField = UITextField()
         textField.setupStyleAndLayout()
-        textField.placeholder = "   Nhập điểm giữa kỳ"
+        textField.placeholder = "Nhập điểm giữa kỳ"
         return textField
     }()
     
     let diemCuoiKi: UITextField = {
         let textField = UITextField()
         textField.setupStyleAndLayout()
-        textField.placeholder = "   Nhập điểm cuôi kỳ"
+        textField.placeholder = "Nhập điểm cuôi kỳ"
         return textField
     }()
     
@@ -35,7 +40,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Ấn để đánh giá", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.gray, for: .highlighted)
         button.backgroundColor  = UIColor(red: 190/255, green: 9/255, blue: 38/255, alpha: 1)
         button.titleLabel?.font  = UIFont(name: "AvenirNext-DemiBold", size: 18)
         button.layer.cornerRadius = 10
@@ -49,7 +54,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Điểm mới.", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.gray, for: .highlighted)
         button.backgroundColor  = UIColor(red: 40/255, green: 157/255, blue: 64/255, alpha: 1)
         button.titleLabel?.font  = UIFont(name: "AvenirNext-DemiBold", size: 18)
         button.layer.cornerRadius = 10
@@ -66,7 +71,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         rs.text = "Kết quả đánh giá.."
         rs.layer.cornerRadius = 8
         rs.layer.borderWidth = 2
-        rs.font = UIFont.italicSystemFont(ofSize: 18)
+        rs.font = UIFont.systemFont(ofSize: 20)
         rs.layer.borderColor = UIColor.white.cgColor
         rs.isEditable = false
         rs.textAlignment = NSTextAlignment.justified
@@ -84,15 +89,84 @@ class ViewController: UIViewController, UITextFieldDelegate {
         setupLayout()
         
         diemMieng.delegate = self
+        diemCuoiKi.delegate = self
+        diemGiuaKi.delegate = self
+        
+        validateButton.addTarget(self, action: #selector(validateTapped), for: .touchUpInside)
+        renewButton.addTarget(self, action: #selector(renewTapped), for: .touchUpInside)
+        
+    }
+    
+    //MARK: - Button function
+    @objc func renewTapped() {
+        diemGiuaKi.text = ""
+        diemCuoiKi.text = ""
+        diemMieng.text = ""
+        result.text = "Kết quả đánh giá."
+        
+        diemGiuaKi.endEditing(true)
+        diemCuoiKi.endEditing(true)
+        diemMieng.endEditing(true)
+        
+    }
+    
+    @objc func validateTapped() {
+        var alertString: String = ""
+        view.endEditing(true)
+        
+
+        diem_giuaKi = diemGiuaKi.text ?? ""
+        diem_mieng = diemMieng.text ?? ""
+        diem_cuoiKi = diemCuoiKi.text ?? ""
+        
+        if diem_mieng == "" {
+            alertString += "Chưa nhập điểm miệng.\n"
+        }
+        if diem_giuaKi == "" {
+            alertString += "Chưa nhập điểm giữa kỳ\n"
+        }
+        if diem_cuoiKi == "" {
+            alertString += "Chưa nhập điểm cuối kỳ.\n"
+        }
+        
+        result.text = alertString
+        
+        
+        
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField.text == "" {
+            textField.text = " "
+        }
         
     }
     
     //MARK: - Input mark section
     func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
-        print(textField.text)
+        
+        if textField.text == " " {
+            textField.text = ""
+        }
+//        else {
+//
+//            if textField.isEqual(diemMieng) {
+//                diem_mieng = textField.text ?? ""
+//            }
+//            if textField.isEqual(diemGiuaKi) {
+//                diem_giuaKi = textField.text ?? ""
+//            }
+//            if textField.isEqual(diemCuoiKi) {
+//                diem_cuoiKi = textField.text ?? ""
+//            }
+//        }
+        
+        
     }
     
-    //MARK: - Functions
+    
+    
+    //MARK: - setup layout
     func setupLayout() {
         
         self.view.addConstraintsWithFormat(format: "H:|-10-[v0]-10-|", views: diemMieng)
@@ -123,13 +197,18 @@ extension UIView {
     }
 }
 
+
 extension UITextField {
     func setupStyleAndLayout() {
         translatesAutoresizingMaskIntoConstraints = false
         layer.borderColor = UIColor.white.cgColor
         layer.borderWidth = 2
         layer.cornerRadius = 10
+        tintColor = .black
         backgroundColor = .white
+        keyboardType = .numbersAndPunctuation
+        font = UIFont.systemFont(ofSize: 20)
+        text = ""
     }
 }
 
