@@ -1,6 +1,6 @@
 version: "Apple Swift version 5.0.1 (swiftlang-1001.0.82.4 clang-1001.0.46.5)"
 options: "2b55f20a15e14b38cf064c5caf1ebfa6"
-build_time: [1563990542, 315332000]
+build_time: [1564074023, 739632000]
 inputs:
-  "/Users/leduy/Desktop/test/test/ViewController.swift": [1563990542, 265291739]
+  "/Users/leduy/Desktop/test/test/ViewController.swift": [1564074023, 596676280]
   "/Users/leduy/Desktop/test/test/AppDelegate.swift": [1563942934, 887217874]

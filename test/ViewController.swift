@@ -18,7 +18,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         let textField = UITextField()
         textField.setupStyleAndLayout()
         textField.placeholder = "Nhập điểm miệng. Ví dụ: 8.5  9  10"
-        
         return textField
     }()
     
@@ -53,7 +52,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     let renewButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Điểm mới.", for: .normal)
+        button.setTitle("Xóa", for: .normal)
         button.setTitleColor(.gray, for: .highlighted)
         button.backgroundColor  = UIColor(red: 40/255, green: 157/255, blue: 64/255, alpha: 1)
         button.titleLabel?.font  = UIFont(name: "AvenirNext-DemiBold", size: 18)
@@ -114,57 +113,75 @@ class ViewController: UIViewController, UITextFieldDelegate {
         var alertString: String = ""
         view.endEditing(true)
         
-
         diem_giuaKi = diemGiuaKi.text ?? ""
         diem_mieng = diemMieng.text ?? ""
         diem_cuoiKi = diemCuoiKi.text ?? ""
         
-        if diem_mieng == "" {
-            alertString += "Chưa nhập điểm miệng.\n"
-        }
-        if diem_giuaKi == "" {
-            alertString += "Chưa nhập điểm giữa kỳ\n"
-        }
-        if diem_cuoiKi == "" {
-            alertString += "Chưa nhập điểm cuối kỳ.\n"
+        if diem_mieng == "" || diem_giuaKi == "" || diem_cuoiKi == "" {
+            if diem_mieng == "" { alertString += "Chưa nhập điểm miệng.\n" }
+            if diem_giuaKi == "" { alertString += "Chưa nhập điểm giữa kỳ.\n" }
+            if diem_cuoiKi == "" { alertString += "Chưa nhập điểm cuối kỳ.\n" }
+            result.text = alertString
+            return
         }
         
-        result.text = alertString
+        var listMieng = [Float]()
+        var miengTB : Float = 0.0
+        var hs1: Float = 0.0
         
+        var listGiuaKy = [Float]()
+        var giuakyTB : Float = 0.0
+        var hs2: Float = 0.0
+        
+        var listCuoiKy = [Float]()
+        var cuoikyTB : Float = 0.0
+        var hs3: Float = 0.0
+        
+        for index in diem_mieng.split(separator: " ") {
+            let score = Float(index) ?? 0.0
+            listMieng.append(score)
+            miengTB += score
+            hs1+=1
+        }
+        
+        for index in diem_giuaKi.split(separator: " ") {
+            let score = Float(index) ?? 0.0
+            listGiuaKy.append(score)
+            giuakyTB += score
+            hs2+=1
+        }
+        
+        for index in diem_cuoiKi.split(separator: " ") {
+            let score = Float(index) ?? 0.0
+            listCuoiKy.append(score)
+            cuoikyTB += score
+            hs3+=1
+        }
+        
+        miengTB = miengTB / hs1
+        giuakyTB = (giuakyTB * 2.0) / hs2
+        cuoikyTB = (cuoikyTB * 3.0) / hs3
+    
+        let averageCoreResult = (miengTB + giuakyTB + cuoikyTB) / 6.0
+        
+        //danh gia hoc sinh
+        if averageCoreResult >= 8.5 && hs1 >= 1 && hs2 >= 2 && miengTB >= 7 && giuakyTB >= 7 && cuoikyTB >= 7 {
+            result.text = "Điểm trung bình: \(averageCoreResult)\nXếp loại: Giỏi."
+        } else if averageCoreResult >= 7 && giuakyTB >= 8 && cuoikyTB >= 8 {
+            result.text = "Điểm trung bình: \(averageCoreResult)\nXếp loại: Khá."
+        } else {
+            result.text = "Điểm trung bình: \(averageCoreResult)\nXếp loại: Trung bình."
+        }
         
         
     }
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        if textField.text == "" {
-            textField.text = " "
-        }
-        
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let aSet = NSCharacterSet(charactersIn:"0123456789.").inverted
+        let compSepByCharInSet = string.components(separatedBy: aSet)
+        let numberFiltered = compSepByCharInSet.joined(separator: " ")
+        return string == numberFiltered
     }
-    
-    //MARK: - Input mark section
-    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
-        
-        if textField.text == " " {
-            textField.text = ""
-        }
-//        else {
-//
-//            if textField.isEqual(diemMieng) {
-//                diem_mieng = textField.text ?? ""
-//            }
-//            if textField.isEqual(diemGiuaKi) {
-//                diem_giuaKi = textField.text ?? ""
-//            }
-//            if textField.isEqual(diemCuoiKi) {
-//                diem_cuoiKi = textField.text ?? ""
-//            }
-//        }
-        
-        
-    }
-    
-    
     
     //MARK: - setup layout
     func setupLayout() {
@@ -202,13 +219,15 @@ extension UITextField {
     func setupStyleAndLayout() {
         translatesAutoresizingMaskIntoConstraints = false
         layer.borderColor = UIColor.white.cgColor
-        layer.borderWidth = 2
+        layer.borderWidth = 0.2
         layer.cornerRadius = 10
         tintColor = .black
         backgroundColor = .white
         keyboardType = .numbersAndPunctuation
         font = UIFont.systemFont(ofSize: 20)
         text = ""
+        clearButtonMode = UITextField.ViewMode.whileEditing
     }
+    
 }
 
