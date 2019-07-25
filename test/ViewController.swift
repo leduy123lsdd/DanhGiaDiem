@@ -9,57 +9,40 @@
 import UIKit
 
 class ViewController: UIViewController, UITextFieldDelegate {
-    //MARK: - Variables
-    var diem_mieng:String = ""
-    var diem_giuaKi:String = ""
-    var diem_cuoiKi:String = ""
     
     let diemMieng: UITextField = {
         let textField = UITextField()
         textField.setupStyleAndLayout()
-        textField.placeholder = "Nhập điểm miệng. Ví dụ: 8.5  9  10"
+        textField.placeholder = " Nhập điểm miệng. Ví dụ: 8.5  9  10"
         return textField
     }()
     
     let diemGiuaKi: UITextField = {
         let textField = UITextField()
         textField.setupStyleAndLayout()
-        textField.placeholder = "Nhập điểm giữa kỳ"
+        textField.placeholder = " Nhập điểm giữa kỳ"
         return textField
     }()
     
     let diemCuoiKi: UITextField = {
         let textField = UITextField()
         textField.setupStyleAndLayout()
-        textField.placeholder = "Nhập điểm cuôi kỳ"
+        textField.placeholder = " Nhập điểm cuôi kỳ"
         return textField
     }()
     
     let validateButton: UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setupStyle()
         button.setTitle("Ấn để đánh giá", for: .normal)
-        button.setTitleColor(.gray, for: .highlighted)
-        button.backgroundColor  = UIColor(red: 190/255, green: 9/255, blue: 38/255, alpha: 1)
-        button.titleLabel?.font  = UIFont(name: "AvenirNext-DemiBold", size: 18)
-        button.layer.cornerRadius = 10
-        button.layer.borderWidth  = 1.0
-        button.layer.borderColor = UIColor.white.cgColor
-        
+        button.backgroundColor  = UIColor(red: 208/255, green: 70/255, blue: 50/255, alpha: 1)
         return button
     }()
     
     let renewButton: UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setupStyle()
         button.setTitle("Xóa", for: .normal)
-        button.setTitleColor(.gray, for: .highlighted)
-        button.backgroundColor  = UIColor(red: 40/255, green: 157/255, blue: 64/255, alpha: 1)
-        button.titleLabel?.font  = UIFont(name: "AvenirNext-DemiBold", size: 18)
-        button.layer.cornerRadius = 10
-        button.layer.borderWidth  = 1.0
-        button.layer.borderColor = UIColor.white.cgColor
-        
         return button
     }()
     
@@ -106,16 +89,15 @@ class ViewController: UIViewController, UITextFieldDelegate {
         diemGiuaKi.endEditing(true)
         diemCuoiKi.endEditing(true)
         diemMieng.endEditing(true)
-        
     }
     
     @objc func validateTapped() {
         var alertString: String = ""
         view.endEditing(true)
         
-        diem_giuaKi = diemGiuaKi.text ?? ""
-        diem_mieng = diemMieng.text ?? ""
-        diem_cuoiKi = diemCuoiKi.text ?? ""
+        let diem_giuaKi = diemGiuaKi.text ?? ""
+        let diem_mieng = diemMieng.text ?? ""
+        let diem_cuoiKi = diemCuoiKi.text ?? ""
         
         if diem_mieng == "" || diem_giuaKi == "" || diem_cuoiKi == "" {
             if diem_mieng == "" { alertString += "Chưa nhập điểm miệng.\n" }
@@ -172,10 +154,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
         } else {
             result.text = "Điểm trung bình: \(averageCoreResult)\nXếp loại: Trung bình."
         }
-        
-        
     }
     
+    //Chi cho nguoi dung nhap du lieu so vao textfield
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let aSet = NSCharacterSet(charactersIn:"0123456789.").inverted
         let compSepByCharInSet = string.components(separatedBy: aSet)
@@ -231,3 +212,14 @@ extension UITextField {
     
 }
 
+extension UIButton {
+    func setupStyle() {
+        translatesAutoresizingMaskIntoConstraints = false
+        setTitleColor(.gray, for: .highlighted)
+        backgroundColor  = UIColor(red: 40/255, green: 157/255, blue: 64/255, alpha: 1)
+        titleLabel?.font  = UIFont(name: "AvenirNext-DemiBold", size: 18)
+        layer.cornerRadius = 10
+        layer.borderWidth  = 1.0
+        layer.borderColor = UIColor.white.cgColor
+    }
+}

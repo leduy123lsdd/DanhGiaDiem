@@ -204,6 +204,8 @@ SWIFT_CLASS("_TtC4test11AppDelegate")
 
 
 
+
+
 @class NSBundle;
 @class NSCoder;
 
